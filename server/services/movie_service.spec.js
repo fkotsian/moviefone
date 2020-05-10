@@ -3,6 +3,8 @@ const movieService = require('./movie_service')
 describe('movieService', () => {
   it('gets a list of popular movies', async () => {
     const res = await movieService.getPopular()
+    console.log(res)
+    expect(res.status).toEqual(200)
     expect(res.data.total_results).toBeGreaterThan(0)
     expect(res.data.total_pages).toBeGreaterThan(0)
 
@@ -15,6 +17,7 @@ describe('movieService', () => {
   it('searches for movies by title', async () => {
     const searchString = "Star Wars"
     const res = await movieService.searchTitle(searchString)
+    expect(res.status).toEqual(200)
     expect(res.data.total_results).toBeGreaterThan(0)
     expect(res.data.total_pages).toBeGreaterThan(0)
 
@@ -26,6 +29,8 @@ describe('movieService', () => {
 
   it('gets details of individual movies', async () => {
     const res = await movieService.getMovie(11)
+    expect(res.status).toEqual(200)
+
     const starWars = res.data
     expect(starWars.id).toBeDefined()
     expect(starWars.title).toEqual("Star Wars")

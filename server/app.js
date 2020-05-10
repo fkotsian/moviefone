@@ -5,11 +5,27 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 
-const movieService = require('server/movie_service')
+// parse json requests
+app.use(express.json());
 
-app.get('/', (req, res) => res.send('loads built React'))
+const movieService = require('./services/movie_service')
 
-app.get('/popular', (req, res) => {
+app.get('/api/movies/popular', async (req, res) => {
+  const popular = await movieService.getPopular()
+  res.json(popular.data)
+})
+
+app.get('/api/movies/search', async (req, res) => {
+  const searchString = req.body.title
+  const search = await movieService.searchTitle(searchString)
+  res.json(search.data)
+})
+
+app.get('/api/movies/:id', async (req, res) => {
+  const movieId = req.params.id
+  const movie = await movieService.getMovie(movieId)
+  res.json(movie.data)
+})
 
 // serve static assets
 app.get('/*', (req, res) => {
