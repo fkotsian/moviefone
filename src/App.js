@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import debounce from 'debounce';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 
@@ -10,15 +11,36 @@ class App extends Component {
     this.state = {
       movies: [],
       loading: false,
+      searchString: "",
     }
+
+    this.loadSearch = this.loadSearch.bind(this)
+    this.loadMovies = this.loadMovies.bind(this)
+    this.debounceLoadMovies = debounce(this.loadMovies, 500)
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.loadPopular()
+  }
+
+  loadPopular() {
+    this.loadMovies(this.getPopular)
+  }
+
+  loadSearch(e) {
+    this.setState({
+      searchString: e.target.value
+    })
+
+    this.debounceLoadMovies(this.searchTitle)
+  }
+
+  async loadMovies(func) {
     try {
       this.setState({ loading: true })
-      const popular = await axios.get('/api/movies/popular')
+      const res = await func()
       this.setState({
-        movies: popular.data.results,
+        movies: res.data.results,
         loading: false,
       })
     } catch (err) {
@@ -26,6 +48,14 @@ class App extends Component {
       console.log(err)
     }
   }
+
+  getPopular = () => axios.get('/api/movies/popular')
+
+  searchTitle = () => axios.get('/api/movies/search', {
+    params: {
+      title: this.state.searchString,
+    }
+  })
 
   renderLoader() {
     return (
@@ -40,7 +70,7 @@ class App extends Component {
 
   renderMovie(m) {
     return (
-      <div className="ui main text container">
+      <div key={m.id} className="ui main text container">
         <div className="ui segment">
           <div className="ui grid">
             <div>{m.title}</div>
@@ -52,20 +82,36 @@ class App extends Component {
     )
   }
 
+  renderEmptyMovie() {
+    return (
+      <div className="ui grid container" id="loader">
+        <div className="ui center aligned middle aligned column">
+          <i className="massive blue film icon"></i>
+          <h2>No Movies Found</h2>
+        </div>
+      </div>
+    )
+  }
+
   render() {
     return (
       <div id="moviefone" className="ui main text container">
         <div className="ui borderless main menu fixed" id="header">
           <div className="ui text container">
             <div className="header item center aligned">
-              Moviefone! for you
+              Moviefone!
             </div>
             <div className="item right aligned category search">
               <div className="ui icon input">
-                <input className="prompt" type="text" placeholder="Search movies..." />
-                  <i className="search icon"></i>
-                </div>
-                <div className="results"></div>
+                <input
+                  className="prompt"
+                  type="text"
+                  placeholder="Search movies..."
+                  onChange={this.loadSearch}
+                />
+                <i className="search icon"></i>
+              </div>
+              <div className="results"></div>
             </div>
           </div>
         </div>
@@ -77,7 +123,9 @@ class App extends Component {
               : null
           }
           {
-            this.state.movies.map(m => this.renderMovie(m))
+            this.state.movies.length
+              ? this.state.movies.map(m => this.renderMovie(m))
+              : this.renderEmptyMovie()
           }
         </div>
       </div>
