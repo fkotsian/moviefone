@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+} from 'react-router-dom'
 import axios from 'axios';
 import debounce from 'debounce';
+import MovieScreen from './containers/MovieScreen';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 
@@ -10,6 +17,7 @@ class App extends Component {
 
     this.state = {
       movies: [],
+      movie: null,
       loading: false,
       searchString: "",
     }
@@ -70,7 +78,7 @@ class App extends Component {
 
   renderMovie(m) {
     return (
-      <div key={m.id} className="ui main text container">
+      <Link key={m.id} to={`/movies/${m.id}`}>
         <div className="ui segment">
           <div className="ui grid">
             <div>{m.title}</div>
@@ -78,7 +86,7 @@ class App extends Component {
             <div>{m.popularity} - {m.vote_count}</div>
           </div>
         </div>
-      </div>
+      </Link>
     )
   }
 
@@ -93,42 +101,69 @@ class App extends Component {
     )
   }
 
+  renderMovieListContainer() {
+    return (
+      <div id="searchResults" className="">
+        {
+          this.state.loading
+            ? this.renderLoader()
+            : null
+        }
+        {
+          this.state.movies.length
+            ? this.state.movies.map(m => this.renderMovie(m))
+            : this.renderEmptyMovie()
+        }
+      </div>
+    )
+  }
+
   render() {
     return (
-      <div id="moviefone" className="ui main text container">
-        <div className="ui borderless main menu fixed" id="header">
-          <div className="ui text container">
-            <div className="header item center aligned">
-              Moviefone!
-            </div>
-            <div className="item right aligned category search">
-              <div className="ui icon input">
-                <input
-                  className="prompt"
-                  type="text"
-                  placeholder="Search movies..."
-                  onChange={this.loadSearch}
-                />
-                <i className="search icon"></i>
+      <Router>
+        <div id="moviefone" className="ui main text container">
+          <div className="ui borderless main menu fixed" id="header">
+            <div className="ui text container">
+              <div className="header item center aligned">
+                <Link to='/'>Moviefone!</Link>
               </div>
-              <div className="results"></div>
+              <div className="item right aligned category search">
+                <div className="ui icon input">
+                  <input
+                    className="prompt"
+                    type="text"
+                    placeholder="Search movies..."
+                    onChange={this.loadSearch}
+                  />
+                  <i className="search icon"></i>
+                </div>
+                <div className="results"></div>
+              </div>
             </div>
           </div>
-        </div>
+          <div className="ui grid container">
 
-        <div id="searchResults" className="ui grid container">
-          {
-            this.state.loading
-              ? this.renderLoader()
-              : null
-          }
-          {
-            this.state.movies.length
-              ? this.state.movies.map(m => this.renderMovie(m))
-              : this.renderEmptyMovie()
-          }
+            <Switch>
+              <Route exact path='/'>
+                {this.renderMovieListContainer()}
+              </Route>
+
+              <Route exact path='/movies'>
+                {this.renderMovieListContainer()}
+              </Route>
+
+              <Route path='/movies/search/:searchString'>
+                {this.renderMovieListContainer()}
+              </Route>
+
+              <Route path='/movies/:movieId' component={MovieScreen}>
+              </Route>
+            </Switch>
+
+          </div>
+
         </div>
-      </div>
+      </Router>
     );
   }
 }

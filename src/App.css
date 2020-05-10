@@ -1,13 +1,15 @@
 #moviefone {
-  margin-top: -60px;
+  padding-top: 40px;
+}
+
+#header {
 }
 
 #searchResults {
-  padding-top: 120px;
 }
 
 #loader {
   z-index: 1;
-  height: 100vh;
+  height: 85vh;
   width: 100%;
 }
