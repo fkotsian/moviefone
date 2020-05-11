@@ -10,7 +10,7 @@ function MovieList({ movies, loading }) {
 
       {
         movies.length > 0
-          ? <div className="ui three column doubling grid">
+          ? <div className="ui three column centered doubling grid">
             {
               movies.map(m => (
                 <div className="column">
