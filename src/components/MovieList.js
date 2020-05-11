@@ -1,5 +1,5 @@
 import React from 'react';
-import Movie from './Movie';
+import MovieCard from './MovieCard';
 import NotFound from './NotFound';
 import Loader from './Loader';
 
@@ -10,7 +10,17 @@ function MovieList({ movies, loading }) {
 
       {
         movies.length > 0
-          ? movies.map(m => <Movie key={m.id} {...m} />)
+          ? <div className="ui three column doubling grid">
+            {
+              movies.map(m => (
+                <div className="column">
+                  <div className="ui cards">
+                    <MovieCard key={m.id} {...m} />
+                  </div>
+                </div>
+              ))
+            }
+            </div>
           : <NotFound />
       }
     </>

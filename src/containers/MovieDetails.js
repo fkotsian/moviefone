@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-import Movie from '../components/Movie';
 import NotFound from '../components/NotFound';
 import Loader from '../components/Loader';
 import {loadMovies} from '../utils';
