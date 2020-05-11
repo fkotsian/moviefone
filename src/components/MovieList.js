@@ -13,9 +13,9 @@ function MovieList({ movies, loading }) {
           ? <div className="ui three column centered doubling grid">
             {
               movies.map(m => (
-                <div className="column">
+                <div key={m.id} className="column">
                   <div className="ui cards">
-                    <MovieCard key={m.id} {...m} />
+                    <MovieCard {...m} />
                   </div>
                 </div>
               ))

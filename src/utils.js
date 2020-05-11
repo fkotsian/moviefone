@@ -12,3 +12,14 @@ export async function loadMovies(func, stateCallback) {
   })
 }
 
+export function infiniteScroll(func) {
+  const pxFromBottom = (
+    document.documentElement.scrollHeight -
+    document.documentElement.scrollTop -
+    window.innerHeight
+  )
+
+  if (pxFromBottom <= 500) {
+    func()
+  }
+}
