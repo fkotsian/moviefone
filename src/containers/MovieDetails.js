@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
+import MovieDetailCard from '../components/MovieDetailCard';
 import NotFound from '../components/NotFound';
 import Loader from '../components/Loader';
 import {loadMovies} from '../utils';
@@ -28,31 +29,17 @@ class MovieDetails extends Component {
     return axios.get(`/api/movies/${movieId}`)
   }
 
-  renderMovieDetails(m) {
-    return (
-      <div key={m.id} className="">
-        <div className="ui segment">
-          <div className="ui grid">
-            <div>{m.title}</div>
-            <div>{m.overview}</div>
-            <div>{m.popularity} - {m.vote_count}</div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   render() {
     return (
-      <div className="">
+      <>
         <Loader loading={this.state.loading} />
 
         {
           this.state.movie
-            ? this.renderMovieDetails(this.state.movie)
+            ? <MovieDetailCard {...this.state.movie} />
             : <NotFound />
         }
-      </div>
+      </>
     );
   }
 }

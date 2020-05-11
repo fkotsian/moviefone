@@ -1,14 +1,15 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {
+  TMDB_IMAGE_PATH,
+  IMAGE_PLACEHOLDER_URL,
+} from '../constants';
 
-const BASE_URL_POSTER_IMG = "http://image.tmdb.org/t/p/w500/"
-const DEFAULT_URL_EMPTY_POSTER = "https://semantic-ui.com/images/wireframe/image.png"
-
-function MovieCard({ id, title, overview, vote_count, poster_path, release_date }) {
+function MovieCard({ id, title, poster_path }) {
   function posterUrl() {
     return poster_path
-      ? `${BASE_URL_POSTER_IMG}${poster_path}`
-      : DEFAULT_URL_EMPTY_POSTER
+      ? `${TMDB_IMAGE_PATH}/w500/${poster_path}`
+      : IMAGE_PLACEHOLDER_URL
   }
 
   function renderTitle() {
@@ -24,7 +25,7 @@ function MovieCard({ id, title, overview, vote_count, poster_path, release_date 
   }
 
   return (
-    <Link to={`/movies/${id}`} className="ui basic card">
+    <Link to={`/movies/${id}`} className="ui raised card">
       <div className="ui fluid image">
         <img src={posterUrl()} />
       </div>
