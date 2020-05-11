@@ -43,6 +43,7 @@ class Header extends Component {
                 type="text"
                 placeholder="Search movies..."
                 onChange={this.searchMovie}
+                autoFocus
               />
               <i className="search icon"></i>
             </div>
