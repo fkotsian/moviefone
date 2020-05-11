@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import debounce from 'debounce';
 import MovieList from '../components/MovieList';
 import {loadMovies} from '../utils';
 
@@ -10,36 +11,57 @@ class SearchMovies extends Component {
     this.state = {
       movies: [],
       loading: false,
+      page: 0,
+      totalPages: null,
     }
 
-    this.loadSearch = this.loadSearch.bind(this)
     this.loadMovies = loadMovies.bind(this)
+    this.loadNextPageDebounced = debounce(this.loadNextPage, 400)
   }
 
   componentDidMount() {
-    this.loadSearch()
+    this.loadFirstPage()
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.searchString !== prevProps.match.params.searchString) {
-      this.loadSearch()
+    if (this.props.match.params.title !== prevProps.match.params.title) {
+      this.loadFirstPage()
     }
   }
 
-  loadSearch() {
-    this.loadMovies(this.searchTitle, res => this.setState({
+  loadFirstPage = () => {
+    this.loadMovies(() => this.searchTitle(1), res => this.setState({
       movies: res.data.results,
+      totalPages: res.data.total_pages,
+      page: 1,
     }))
   }
 
-  searchTitle = () => {
-    const {searchString} = this.props.match.params
-    if (!searchString) {
+  loadNextPage = () => {
+    if (this.state.totalPages && this.state.page >= this.state.totalPages) {
+      return
+    }
+
+    this.loadMovies(this.searchTitle, res => this.setState(
+      prevState => ({
+        movies: [...prevState.movies, ...res.data.results],
+        totalPages: res.data.total_pages,
+        page: prevState.page+1,
+      })
+    ))
+  }
+
+  searchTitle = (page=null) => {
+    const {title} = this.props.match.params
+    if (!title) {
       return Promise.resolve()
     }
 
     return axios.get('/api/movies/search', {
-      params: { title: searchString }
+      params: {
+        title: title,
+        page: page || this.state.page+1,
+      }
     })
   }
 
@@ -48,6 +70,7 @@ class SearchMovies extends Component {
       <MovieList
         loading={this.state.loading}
         movies={this.state.movies}
+        loadNext={this.loadNextPageDebounced}
       />
     );
   }

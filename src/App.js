@@ -23,7 +23,7 @@ function App() {
           <Switch>
             <Route exact path='/' component={PopularMovies} />
 
-            <Route path='/search/:searchString?' component={SearchMovies} />
+            <Route path='/search/:title?' component={SearchMovies} />
 
             <Route exact path='/movies/popular' component={PopularMovies} />
 

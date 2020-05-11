@@ -19,7 +19,7 @@ export function infiniteScroll(func) {
     window.innerHeight
   )
 
-  if (pxFromBottom <= 500) {
+  if (pxFromBottom <= 1800) {
     func()
   }
 }

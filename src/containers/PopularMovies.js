@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import debounce from 'debounce';
 import MovieList from '../components/MovieList';
-import {loadMovies, infiniteScroll} from '../utils';
+import {loadMovies} from '../utils';
 
 class PopularMovies extends Component {
   constructor(props) {
@@ -21,14 +21,6 @@ class PopularMovies extends Component {
 
   componentDidMount() {
     this.loadNextPageDebounced()
-
-    this.scrollListener = document.addEventListener("scroll", e => {
-      infiniteScroll(this.loadNextPageDebounced)
-    })
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("scroll", this.scrollListener)
   }
 
   loadNextPage = () => {
@@ -56,6 +48,7 @@ class PopularMovies extends Component {
       <MovieList
         loading={this.state.loading}
         movies={this.state.movies}
+        loadNext={this.loadNextPageDebounced}
       />
     );
   }

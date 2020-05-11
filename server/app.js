@@ -11,15 +11,15 @@ app.use(express.json());
 const movieService = require('./services/movie_service')
 
 app.get('/api/movies/popular', async (req, res) => {
-  const page = req.query.page
+  const {page} = req.query
   const popular = await movieService.getPopular(page)
-  console.log(popular.data)
   res.json(popular.data)
 })
 
 app.get('/api/movies/search', async (req, res) => {
-  const searchString = req.query.title
-  const search = await movieService.searchTitle(searchString)
+  const {title, page} = req.query
+  const search = await movieService.searchTitle(title, page)
+  console.log(search.data)
   res.json(search.data)
 })
 
