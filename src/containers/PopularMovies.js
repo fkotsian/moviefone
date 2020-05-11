@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import debounce from 'debounce';
 import MovieList from '../components/MovieList';
+import {loadMovies} from '../utils';
 
 class PopularMovies extends Component {
   constructor(props) {
@@ -12,48 +12,16 @@ class PopularMovies extends Component {
       loading: false,
     }
 
-    this.loadSearch = this.loadSearch.bind(this)
-    this.loadMovies = this.loadMovies.bind(this)
-    this.debounceLoadMovies = debounce(this.loadMovies, 500)
+    this.loadMovies = loadMovies.bind(this)
   }
 
   componentDidMount() {
-    this.loadPopular()
-  }
-
-  loadPopular() {
-    this.loadMovies(this.getPopular)
-  }
-
-  loadSearch(e) {
-    this.setState({
-      searchString: e.target.value
-    })
-
-    this.debounceLoadMovies(this.searchTitle)
-  }
-
-  async loadMovies(func) {
-    try {
-      this.setState({ loading: true })
-      const res = await func()
-      this.setState({
-        movies: res.data.results,
-        loading: false,
-      })
-    } catch (err) {
-      console.log("Err")
-      console.log(err)
-    }
+    this.loadMovies(this.getPopular, res => this.setState({
+      movies: res.data.results,
+    }))
   }
 
   getPopular = () => axios.get('/api/movies/popular')
-
-  searchTitle = () => axios.get('/api/movies/search', {
-    params: {
-      title: this.state.searchString,
-    }
-  })
 
   render() {
     return (

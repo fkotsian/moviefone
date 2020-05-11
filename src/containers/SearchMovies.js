@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import debounce from 'debounce';
 import MovieList from '../components/MovieList';
+import {loadMovies} from '../utils';
 
 class SearchMovies extends Component {
   constructor(props) {
@@ -13,8 +13,7 @@ class SearchMovies extends Component {
     }
 
     this.loadSearch = this.loadSearch.bind(this)
-    this.loadMovies = this.loadMovies.bind(this)
-    this.debounceLoadMovies = debounce(this.loadMovies, 500)
+    this.loadMovies = loadMovies.bind(this)
   }
 
   componentDidMount() {
@@ -28,28 +27,21 @@ class SearchMovies extends Component {
   }
 
   loadSearch() {
-    this.loadMovies(this.searchTitle)
+    this.loadMovies(this.searchTitle, res => this.setState({
+      movies: res.data.results,
+    }))
   }
 
-  async loadMovies(func) {
-    try {
-      this.setState({ loading: true })
-      const res = await func()
-      this.setState({
-        movies: res.data.results,
-        loading: false,
-      })
-    } catch (err) {
-      console.log("Err")
-      console.log(err)
+  searchTitle = () => {
+    const {searchString} = this.props.match.params
+    if (!searchString) {
+      return Promise.resolve()
     }
-  }
 
-  searchTitle = () => axios.get('/api/movies/search', {
-    params: {
-      title: this.props.match.params.searchString,
-    }
-  })
+    return axios.get('/api/movies/search', {
+      params: { title: searchString }
+    })
+  }
 
   render() {
     return (

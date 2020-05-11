@@ -1,15 +1,13 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
 } from 'react-router-dom'
-import axios from 'axios';
-import debounce from 'debounce';
-import MovieScreen from './containers/MovieScreen';
+import Header from './components/Header';
 import PopularMovies from './containers/PopularMovies';
 import SearchMovies from './containers/SearchMovies';
-import Header from './components/Header';
+import MovieDetails from './containers/MovieDetails';
 import 'semantic-ui-css/semantic.min.css';
 import './App.css';
 
