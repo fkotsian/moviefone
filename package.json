@@ -19,8 +19,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test && test-server",
-    "test-server": "jest server",
+    "start-server": "node server/server.js",
+    "prod": "yarn run build && yarn run start-server",
+    "test": "jest server",
     "eject": "react-scripts eject"
   },
   "jest": {

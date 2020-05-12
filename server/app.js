@@ -2,13 +2,15 @@
 require('dotenv').config()
 
 // server setup
+const movieService = require('./services/movie_service')
 const express = require('express')
+const path = require('path')
 const app = express()
 
 // parse json requests
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '..', 'build')));
 
-const movieService = require('./services/movie_service')
 
 app.get('/api/movies/popular', async (req, res) => {
   const {page} = req.query
@@ -30,7 +32,7 @@ app.get('/api/movies/:id', async (req, res) => {
 
 // serve static assets
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'))
 })
 
 module.exports = app
