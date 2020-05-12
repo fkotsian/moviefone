@@ -22,11 +22,7 @@ function App() {
         <div className="ui grid container">
           <Switch>
             <Route exact path='/' component={PopularMovies} />
-
             <Route path='/search/:title?' component={SearchMovies} />
-
-            <Route exact path='/movies/popular' component={PopularMovies} />
-
             <Route path='/movies/:movieId?' component={MovieDetails} />
           </Switch>
         </div>

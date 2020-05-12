@@ -3,7 +3,6 @@ const movieService = require('./movie_service')
 describe('movieService', () => {
   it('gets a list of popular movies', async () => {
     const res = await movieService.getPopular()
-    console.log(res)
     expect(res.status).toEqual(200)
     expect(res.data.total_results).toBeGreaterThan(0)
     expect(res.data.total_pages).toBeGreaterThan(0)

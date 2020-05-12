@@ -4,7 +4,7 @@ export async function loadMovies(func, stateCallback) {
     const res = await func()
     stateCallback(res)
   } catch (err) {
-    console.log("Err")
+    console.log("Error loading movies:")
     console.log(err)
   }
   this.setState({

@@ -19,7 +19,6 @@ app.get('/api/movies/popular', async (req, res) => {
 app.get('/api/movies/search', async (req, res) => {
   const {title, page} = req.query
   const search = await movieService.searchTitle(title, page)
-  console.log(search.data)
   res.json(search.data)
 })
 
